@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import { Helmet } from 'react-helmet'
 import styles from './blog.module.css'
 import Layout from '../components/layout'
+import Pagination from '../components/pagination'
 import ArticlePreview from '../components/article-preview'
 
 class BlogIndex extends React.Component {
@@ -27,6 +28,7 @@ class BlogIndex extends React.Component {
                 )
               })}
             </ul>
+            <Pagination links={ this.props.pageContext } />
           </div>
         </div>
       </Layout>
@@ -37,8 +39,12 @@ class BlogIndex extends React.Component {
 export default BlogIndex
 
 export const pageQuery = graphql`
-  query BlogIndexQuery {
-    allContentfulBlogPost(sort: { fields: [publishDate], order: DESC }) {
+  query($skip: Int!, $limit: Int!) {
+    allContentfulBlogPost(
+        sort: { fields: [publishDate], order: DESC }
+        skip: $skip
+        limit: $limit
+      ) {
       edges {
         node {
           title
